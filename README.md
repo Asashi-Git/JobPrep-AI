@@ -1,4 +1,3 @@
-Minimal or no utilization of AI (only to explain concepts). ps: no skill in react, and basics in javascript.
 
 Project: [https://lilac-bromine-67e.notion.site/Projet-Full-Stack-FlashMind-Flashcards-Quiz-IA-2f5ee7337bbf808faf35c78fc24d39ee](https://lilac-bromine-67e.notion.site/In-Memory-of-Gojo-2f6ee7337bbf80079c13d1c27f4eb0e4)
 
@@ -545,7 +544,7 @@ WORKDIR /app
 COPY package*.json ./
 
 FROM base AS development
-RUN npm ci --include=dev
+RUN npm ci 
 
 COPY . .
 
@@ -553,11 +552,12 @@ EXPOSE 5000
 CMD ["npm", "start" ]
 
 FROM base AS build
-RUN npm ci --include=build
+RUN npm ci 
 COPY . .
-RUN npm build
+RUN npm run build
 
 FROM nginx:stable-alpine AS production
+COPY nginx.conf /etc/nginx
 COPY --from=build /app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
