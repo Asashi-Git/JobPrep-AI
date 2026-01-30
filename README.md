@@ -506,7 +506,7 @@ COPY package*.json ./
 #STAGE 2 étape de développement 
 FROM base AS development
 ENV NODE_ENV=development
-RUN npm install
+RUN npm ci --include=dev
 
 # 2. Copie du code source
 COPY . .
@@ -517,7 +517,7 @@ CMD ["npx" , "nodemon", "src/server.js"] # nom du fichier node
 #STAGE 3 étape de production
 FROM base AS production
 ENV NODE_ENV=production
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci --omit=dev && npm cache clean --force
 USER node
 
 #Copie du code source
@@ -527,6 +527,16 @@ EXPOSE 3000
 CMD ["dumb-init", "node", "src/server.js"]
 ```
 
+npm-ci:
+source: https://docs.npmjs.com/cli/v10/commands/npm-ci?v=true
+
+
+
+
+
+
+
+
 ```dockerfile
 From node:lts-alpine AS base
 
@@ -535,8 +545,7 @@ WORKDIR /app
 COPY package*.json ./
 
 FROM base AS development
-ENV NODE_ENV=development
-RUN npm install
+RUN npm ci --include=dev
 
 COPY . .
 
@@ -544,16 +553,14 @@ EXPOSE 5000
 CMD ["npm", "start" ]
 
 FROM base AS build
-ENV NODE_ENV=production
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci --include=build
 COPY . .
 RUN npm build
 
-FROM base AS production
-ENV NODE_ENV=production
-
-
-
+FROM nginx:stable-alpine AS production
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 
 
 ```
