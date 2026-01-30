@@ -488,50 +488,6 @@ source: https://docs.cypress.io/app/core-concepts/writing-and-organizing-tests
 ### API DOCKERFILE
 
 ```dockerfile
-# ------------------------------
-
-#STAGE 1 étape de base commune
-FROM node:lts-alpine AS base
-
-# Installation de curl pour le HEALTHCHECK défini dans votre docker-compose
-RUN apk add --no-cache curl
-
-# Définition du répertoire de travail dans le conteneur
-WORKDIR /app
-
-COPY package*.json ./
-
-# ------------------------------
-
-#STAGE 2 étape de développement 
-FROM base AS development
-ENV NODE_ENV=development
-RUN npm ci --include=dev
-
-# 2. Copie du code source
-COPY . .
-
-EXPOSE 3000 
-CMD ["npx" , "nodemon", "src/server.js"] # nom du fichier node
-
-# ------------------------------
-
-#STAGE 3 étape de production
-FROM base AS production
-ENV NODE_ENV=production
-# dumb-init : pour la gestion des processus
-RUN apk add --no-cache dumb-init
-RUN npm ci --omit=dev && npm cache clean --force
-
-#Copie du code source
-COPY . .
-USER node
-
-EXPOSE 3000
-CMD ["dumb-init", "node", "src/server.js"]
-```
-
-```dockerfile
 # ============================================
 # ÉTAPE 1 : Base (Le socle commun)
 # ============================================
@@ -609,17 +565,7 @@ EXPOSE 5000
 CMD ["node", "src/server.js"]
 ```
 
-
-
-
-
-
-
-
-
-
-
-
+### APP DOCKERFILE
 
 ```dockerfile
 FROM node:lts-alpine AS base
@@ -770,3 +716,24 @@ Phases:
 1. Prepare MariaDB
 2. Prepare the Backend
 3. Prepare the frontend
+
+
+
+```mermaid
+erDiagram
+    %% Le Coeur du systeme
+    USER ||--o{ JOB_APPLICATION : "Gère (Dossiers)"
+    USER ||--o{ CV : "Possède"
+    USER ||--o{ COVER_LETTER : "Possède"
+    USER ||--o{ API_USAGE : "Consomme"
+
+    %% Le Dossier de candidature regroupe les documents
+    JOB_APPLICATION }|--|| CV : "Contient"
+    JOB_APPLICATION }|--|| COVER_LETTER : "Contient"
+    JOB_APPLICATION }|--|| INTERVIEW : "Prépare"
+
+    %% La provenance (Traçabilité)
+    CV }o--|| PROMPT_TEMPLATE : "Généré par"
+    COVER_LETTER }o--|| PROMPT_TEMPLATE : "Généré par"
+    INTERVIEW }o--|| PROMPT_TEMPLATE : "Généré par"
+```
