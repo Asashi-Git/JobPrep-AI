@@ -519,13 +519,12 @@ CMD ["npx" , "nodemon", "src/server.js"] # nom du fichier node
 #STAGE 3 étape de production
 FROM base AS production
 ENV NODE_ENV=production
+RUN apk add --no-cache curl dumb-init
 RUN npm ci --omit=dev && npm cache clean --force
+
 #Copie du code source
 COPY . .
 USER node
-
-
-
 
 EXPOSE 3000
 CMD ["dumb-init", "node", "src/server.js"]
@@ -793,5 +792,3 @@ Phases:
 1. Prepare MariaDB
 2. Prepare the Backend
 3. Prepare the frontend
-
-scoubidou testiculos speculos
