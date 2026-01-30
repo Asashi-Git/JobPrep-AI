@@ -1,1 +1,76 @@
 # Main orchestration (App, DB, UI)
+services:
+  api:
+    container_name: jobprep_api
+    secrets:
+      - db_user
+      - db_password
+      - db_name
+      - jwt_secret
+      - api_key
+    networks:
+      - jobprep_private_network
+      - jobprep_public_network
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  app:
+    container_name: jobprep_app
+    networks:
+      - jobprep_public_network
+    depends_on:
+      api:
+        condition: service_healthy
+
+  mariadb:
+    image: mariadb:lts
+    container_name: jobprep_db
+    environment:
+      - MARIADB_USER_FILE=/run/secrets/db_user
+      - MARIADB_PASSWORD_FILE=/run/secrets/db_password
+      - MARIADB_DATABASE_FILE=/run/secrets/db_name
+      - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - jobprep_private_network
+    secrets:
+      - db_user
+      - db_password
+      - db_name
+      - db_root_password
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  mariadb_data:
+  api_node_modules:
+  app_node_modules:
+  cypress_results:
+  cypress_screenshots:
+  cypress_videos:
+
+networks:
+  jobprep_private_network:
+    internal: true
+  jobprep_public_network:
+
+secrets:
+  db_user:
+    file: ./secrets/db_user.txt
+  db_password:
+    file: ./secrets/db_password.txt
+  db_name:
+    file: ./secrets/db_name.txt
+  db_root_password:
+    file: ./secrets/db_root_password.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+  api_key:
+    file: ./secrets/api_key.txt

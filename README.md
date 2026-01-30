@@ -33,7 +33,7 @@ JobPrep-AI/
 │   ├── package.json
 │   ├── package-lock.json       # Will be genereted after npm install
 │   └── src/                    # Backend source code directory
-│       └── index.js            # API Entry point
+│       └── server.js            # API Entry point
 │
 ├── app/                        # FRONTEND (React/Vite) 
 │   ├── Dockerfile              # Instruction to build the Frontend image
@@ -523,6 +523,7 @@ USER node
 #Copie du code source
 COPY . .
 
+EXPOSE 3000
 CMD ["dumb-init", "node", "src/server.js"]
 ```
 
