@@ -1,15 +1,15 @@
-Minimal or no utilization of AI mal or no utilization of AI (only to explain concepts). ps: no skill in react, and basics in javascript.
+Minimal or no utilization of AI (only to explain concepts). ps: no skill in react, and basics in javascript.
 
 Project: [https://lilac-bromine-67e.notion.site/Projet-Full-Stack-FlashMind-Flashcards-Quiz-IA-2f5ee7337bbf808faf35c78fc24d39ee](https://lilac-bromine-67e.notion.site/In-Memory-of-Gojo-2f6ee7337bbf80079c13d1c27f4eb0e4)
 
-Techno used: Node.JS express corse, React.JS vite, Docker, MariaDb, Cypress.
+Techno used: Node.JS express cors, React.JS vite, Docker, MariaDb, Cypress.
 
 ---
 
 ### Base project structure to create:
 
 ```
-jobprep-project/
+JobPrep-AI/
 │
 ├── docker-compose.yml          # Main orchestration (App, DB, UI)
 ├── docker-compose.override.yml # Dev orchestration
@@ -511,7 +511,7 @@ RUN npm install
 # 2. Copie du code source
 COPY . .
 
-EXPOSE 5000 
+EXPOSE 3000 
 CMD ["npx" , "nodemon", "src/server.js"] # nom du fichier node
 
 #STAGE 3 étape de production
@@ -548,7 +548,9 @@ RUN npm ci --only=production && npm cache clean --force
 COPY . .
 RUN npm build
 
-FROM
+FROM base AS production
+ENV NODE_ENV=production
+
 
 
 
