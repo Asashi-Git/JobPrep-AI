@@ -519,7 +519,8 @@ CMD ["npx" , "nodemon", "src/server.js"] # nom du fichier node
 #STAGE 3 étape de production
 FROM base AS production
 ENV NODE_ENV=production
-RUN apk add --no-cache curl dumb-init
+# dumb-init : pour la gestion des processus
+RUN apk add --no-cache dumb-init
 RUN npm ci --omit=dev && npm cache clean --force
 
 #Copie du code source
@@ -532,115 +533,86 @@ CMD ["dumb-init", "node", "src/server.js"]
 
 ```dockerfile
 # ============================================
-
 # ÉTAPE 1 : Base (Le socle commun)
-
 # ============================================
 
-FROM node:20-alpine AS base
+FROM node:lts-alpine AS base
 
 # Installation des outils système
-
 # curl est nécessaire pour le HEALTHCHECK
-
 RUN apk add --no-cache curl
 
 # Définition du répertoire de travail
-
 WORKDIR /app
 
 # On copie les définitions de dépendances
-
 # IMPORTANT : On ne copie PAS encore le code source pour profiter du cache Docker
-
 COPY package*.json ./
 
 # ============================================
-
 # ÉTAPE 2 : Développement (Target: development)
-
 # ============================================
 
 FROM base AS development
 
 # Utilisation de npm ci avec --include=dev
-
-# Cela force l'installation de TOUT (nodemon, jest, etc.) même si NODE_ENV change.
-
-# C'est beaucoup plus robuste que npm install.
-
+# Cela force l'installation de TOUT (nodemon, jest, etc.)
 RUN npm ci --include=dev
 
-# Note : On ne copie pas le code source ici (src), car dans docker-compose
+# Note : On ne copie pas le code source ici (src), car docker-compose utilise un volume.
 
-# vous utilisez un volume (- ./api/src:/app/src) pour le "Hot Reload".
+# Harmonisation avec le docker-compose (PORT 5000)
+EXPOSE 5000 
 
-EXPOSE 3000 CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev"]
 
 # ============================================
-
 # ÉTAPE 3 : Préparation Production (Nettoyage)
-
 # ============================================
 
 FROM base AS deps-prod
 
-# Ici, on installe UNIQUEMENT les dépendances de production (le "béton")
-
+# Ici, on installe UNIQUEMENT les dépendances de production
 # --omit=dev garantit qu'aucun outil de test ou de build ne traîne.
-
 RUN npm ci --omit=dev
 
 # ============================================
-
 # ÉTAPE 4 : Production Finale (Target: production)
-
 # ============================================
 
-FROM node:20-alpine AS production
+FROM node:lts-alpine AS production
 
-# On réinstalle curl pour la prod (car on part d'une image vierge "node:20-alpine")
-
+# On réinstalle curl pour la prod
 RUN apk add --no-cache curl
 
 # SÉCURITÉ : Création d'un utilisateur système restreint
-
-RUN addgroup -g 1001 -S nodejs &&  
-adduser -S expressjs -u 1001 -G nodejs
+RUN addgroup -g 1001 -S nodejs && adduser -S expressjs -u 1001 -G nodejs
 
 WORKDIR /app
 
 # COPIE DES FICHIERS : On récupère les éléments préparés aux étapes précédentes
 
-# On change le propriétaire des fichiers (chown) pour l'utilisateur restreint
-
 # 1. On récupère les node_modules propres de l'étape 3
-
 COPY --from=deps-prod --chown=expressjs:nodejs /app/node_modules ./node_modules
 
-# 2. On copie le code source (cette fois-ci c'est nécessaire car pas de volume en prod)
-
-COPY --chown=expressjs:nodejs ./src ./src COPY --chown=expressjs:nodejs package*.json ./
+# 2. On copie le code source
+COPY --chown=expressjs:nodejs ./src ./src 
+COPY --chown=expressjs:nodejs package*.json ./
 
 # On bascule sur l'utilisateur restreint
-
 USER expressjs
 
-EXPOSE 3000
+# Harmonisation avec le docker-compose
+EXPOSE 5000
 
 # Lancement
-
-CMD ["node", "src/index.js"]
-
-# (Ou "npm start" si votre script start fait juste "node src/index.js")
+CMD ["node", "src/server.js"]
 ```
 
 
 
 
 
-npm-ci:
-source: https://docs.npmjs.com/cli/v10/commands/npm-ci?v=true
 
 
 
@@ -650,7 +622,7 @@ source: https://docs.npmjs.com/cli/v10/commands/npm-ci?v=true
 
 
 ```dockerfile
-From node:lts-alpine AS base
+FROM node:lts-alpine AS base
 
 WORKDIR /app
 
@@ -661,7 +633,7 @@ RUN npm ci
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 3000
 CMD ["npm", "start" ]
 
 FROM base AS build
@@ -711,6 +683,12 @@ source: https://dev.to/minima_desk_cd9b151c4e2fb/dockerize-your-nodejs-applicati
 source: https://www.digitalocean.com/community/tutorials/how-to-build-a-node-js-application-with-docker
 source: https://stackoverflow.com/questions/49594501/copy-package-json-dockerfile
 source: https://medium.com/@muhammadnaqeeb/dockerizing-a-node-js-and-express-js-app-9cb31cf9139e
+
+npm-ci:
+source: https://docs.npmjs.com/cli/v10/commands/npm-ci?v=true
+
+Best Practice:
+source: https://www.docker.com/blog/docker-best-practices-choosing-between-run-cmd-and-entrypoint/
 
 ---
 

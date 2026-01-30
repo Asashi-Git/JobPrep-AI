@@ -63,3 +63,9 @@ A categorized dictionary of commands for the JobPrep-AI team.
 | **`git reset HEAD~1`** | Undoes the last `commit`, but keeps your file changes. | When you committed too early and want to "un-commit" to fix a typo.               |
 | **`git stash`**        | Temporarily hides your changes in a pocket.            | When you need to pull updates but aren't ready to commit your current messy work. |
 | **`git stash pop`**    | Brings back the hidden changes.                        | After you have pulled updates and are ready to resume working.                    |
+
+git config --global alias.tree "log --graph --oneline --all --decorate"
+git tree
+
+Nuclear Option:
+git push --force origin main
