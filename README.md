@@ -1,5 +1,4 @@
 Minimal or no utilization of AI mal or no utilization of AI (only to explain concepts). ps: no skill in react, and basics in javascript.
-caca
 
 Project: [https://lilac-bromine-67e.notion.site/Projet-Full-Stack-FlashMind-Flashcards-Quiz-IA-2f5ee7337bbf808faf35c78fc24d39ee](https://lilac-bromine-67e.notion.site/In-Memory-of-Gojo-2f6ee7337bbf80079c13d1c27f4eb0e4)
 
@@ -546,11 +545,11 @@ CMD ["npm", "start" ]
 FROM base AS build
 ENV NODE_ENV=production
 RUN npm ci --only=production && npm cache clean --force
-USER node
+COPY . .
 RUN npm build
 
+FROM
 
-COPY . .
 
 
 
