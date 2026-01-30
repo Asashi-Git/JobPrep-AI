@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-=======
 
-![image](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Ffd%2F82%2F1d%2Ffd821d2c6b9250a86517905e583f3bd4.jpg&f=1&nofb=1&ipt=faa17156d3d36277b4bd0d8353402c708e776d6457112dd83c579dbb1c5b3613)
-
-Minimal or no utilization of AI (only to explain concepts). ps: no skill in react, and basics in javascript.
->>>>>>> 30815efc45ebabf6a5fc03a35764869c0a6790c2
+![image](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia1.tenor.com%2Fm%2FlP6cT-0rpx0AAAAC%2Fmark-zuckerberg.gif&f=1&nofb=1&ipt=b293fec11523570b1f076cfff29b4a275a2634db478573af86fe5259931590dc)
 
 Project: [https://lilac-bromine-67e.notion.site/Projet-Full-Stack-FlashMind-Flashcards-Quiz-IA-2f5ee7337bbf808faf35c78fc24d39ee](https://lilac-bromine-67e.notion.site/In-Memory-of-Gojo-2f6ee7337bbf80079c13d1c27f4eb0e4)
 
@@ -504,10 +499,9 @@ RUN apk add --no-cache curl
 # Définition du répertoire de travail dans le conteneur
 WORKDIR /app
 
-# ------------------------------
-
-# 1. Installation des dépendances
 COPY package*.json ./
+
+# ------------------------------
 
 #STAGE 2 étape de développement 
 FROM base AS development
@@ -520,18 +514,131 @@ COPY . .
 EXPOSE 3000 
 CMD ["npx" , "nodemon", "src/server.js"] # nom du fichier node
 
+# ------------------------------
+
 #STAGE 3 étape de production
 FROM base AS production
 ENV NODE_ENV=production
 RUN npm ci --omit=dev && npm cache clean --force
-USER node
-
 #Copie du code source
 COPY . .
+USER node
+
+
+
 
 EXPOSE 3000
 CMD ["dumb-init", "node", "src/server.js"]
 ```
+
+```dockerfile
+# ============================================
+
+# ÉTAPE 1 : Base (Le socle commun)
+
+# ============================================
+
+FROM node:20-alpine AS base
+
+# Installation des outils système
+
+# curl est nécessaire pour le HEALTHCHECK
+
+RUN apk add --no-cache curl
+
+# Définition du répertoire de travail
+
+WORKDIR /app
+
+# On copie les définitions de dépendances
+
+# IMPORTANT : On ne copie PAS encore le code source pour profiter du cache Docker
+
+COPY package*.json ./
+
+# ============================================
+
+# ÉTAPE 2 : Développement (Target: development)
+
+# ============================================
+
+FROM base AS development
+
+# Utilisation de npm ci avec --include=dev
+
+# Cela force l'installation de TOUT (nodemon, jest, etc.) même si NODE_ENV change.
+
+# C'est beaucoup plus robuste que npm install.
+
+RUN npm ci --include=dev
+
+# Note : On ne copie pas le code source ici (src), car dans docker-compose
+
+# vous utilisez un volume (- ./api/src:/app/src) pour le "Hot Reload".
+
+EXPOSE 3000 CMD ["npm", "run", "dev"]
+
+# ============================================
+
+# ÉTAPE 3 : Préparation Production (Nettoyage)
+
+# ============================================
+
+FROM base AS deps-prod
+
+# Ici, on installe UNIQUEMENT les dépendances de production (le "béton")
+
+# --omit=dev garantit qu'aucun outil de test ou de build ne traîne.
+
+RUN npm ci --omit=dev
+
+# ============================================
+
+# ÉTAPE 4 : Production Finale (Target: production)
+
+# ============================================
+
+FROM node:20-alpine AS production
+
+# On réinstalle curl pour la prod (car on part d'une image vierge "node:20-alpine")
+
+RUN apk add --no-cache curl
+
+# SÉCURITÉ : Création d'un utilisateur système restreint
+
+RUN addgroup -g 1001 -S nodejs &&  
+adduser -S expressjs -u 1001 -G nodejs
+
+WORKDIR /app
+
+# COPIE DES FICHIERS : On récupère les éléments préparés aux étapes précédentes
+
+# On change le propriétaire des fichiers (chown) pour l'utilisateur restreint
+
+# 1. On récupère les node_modules propres de l'étape 3
+
+COPY --from=deps-prod --chown=expressjs:nodejs /app/node_modules ./node_modules
+
+# 2. On copie le code source (cette fois-ci c'est nécessaire car pas de volume en prod)
+
+COPY --chown=expressjs:nodejs ./src ./src COPY --chown=expressjs:nodejs package*.json ./
+
+# On bascule sur l'utilisateur restreint
+
+USER expressjs
+
+EXPOSE 3000
+
+# Lancement
+
+CMD ["node", "src/index.js"]
+
+# (Ou "npm start" si votre script start fait juste "node src/index.js")
+```
+
+
+
+
 
 npm-ci:
 source: https://docs.npmjs.com/cli/v10/commands/npm-ci?v=true
@@ -564,11 +671,10 @@ COPY . .
 RUN npm run build
 
 FROM nginx:stable-alpine AS production
-COPY nginx.conf /etc/nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
-
 
 ```
 
@@ -687,3 +793,5 @@ Phases:
 1. Prepare MariaDB
 2. Prepare the Backend
 3. Prepare the frontend
+
+scoubidou testiculos speculos
