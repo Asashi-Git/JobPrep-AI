@@ -57,9 +57,9 @@ A categorized dictionary of commands for the JobPrep-AI team.
 
 *Use these when things go wrong.*
 
-| Command | What it does | When to use it |
-| :--- | :--- | :--- |
-| **`git checkout .`** | **DANGER:** Discards all local changes to files. | When you messed up your code and just want to reset files to the last commit. |
-| **`git reset HEAD~1`** | Undoes the last `commit`, but keeps your file changes. | When you committed too early and want to "un-commit" to fix a typo. |
-| **`git stash`** | Temporarily hides your changes in a pocket. | When you need to pull updates but aren't ready to commit your current messy work. |
-| **`git stash pop`** | Brings back the hidden changes. | After you have pulled updates and are ready to resume working. |
+| Command                | What it does                                           | When to use it                                                                    |
+| :--------------------- | :----------------------------------------------------- | :-------------------------------------------------------------------------------- |
+| **`git checkout .`**   | **DANGER:** Discards all local changes to files.       | When you messed up your code and just want to reset files to the last commit.     |
+| **`git reset HEAD~1`** | Undoes the last `commit`, but keeps your file changes. | When you committed too early and want to "un-commit" to fix a typo.               |
+| **`git stash`**        | Temporarily hides your changes in a pocket.            | When you need to pull updates but aren't ready to commit your current messy work. |
+| **`git stash pop`**    | Brings back the hidden changes.                        | After you have pulled updates and are ready to resume working.                    |
