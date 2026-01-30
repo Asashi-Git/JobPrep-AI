@@ -1,8 +1,5 @@
 
-https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Ffd%2F82%2F1d%2Ffd821d2c6b9250a86517905e583f3bd4.jpg&f=1&nofb=1&ipt=faa17156d3d36277b4bd0d8353402c708e776d6457112dd83c579dbb1c5b3613
-
-
-
+![image](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Ffd%2F82%2F1d%2Ffd821d2c6b9250a86517905e583f3bd4.jpg&f=1&nofb=1&ipt=faa17156d3d36277b4bd0d8353402c708e776d6457112dd83c579dbb1c5b3613)
 
 Minimal or no utilization of AI (only to explain concepts). ps: no skill in react, and basics in javascript.
 
