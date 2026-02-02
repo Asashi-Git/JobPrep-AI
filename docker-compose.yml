@@ -1,4 +1,3 @@
-# Main orchestration (App, DB, UI)
 services:
   api:
     container_name: jobprep_api

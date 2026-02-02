@@ -1,4 +1,3 @@
-# Dev orchestration
 services:
   api:
     build:
