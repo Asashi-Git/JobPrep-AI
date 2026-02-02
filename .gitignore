@@ -2,8 +2,8 @@
 node_modules/
 
 # Secrets
-secrets/
-*.txt
+# secrets/
+# *.txt
 
 # Environment variables
 .env
