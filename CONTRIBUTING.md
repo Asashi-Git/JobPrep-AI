@@ -78,3 +78,5 @@ git remote -v
 
 git config --global user.email "email" 
 git config --global user.name "Username"
+
+git rm -r --cached secrets/
