@@ -786,4 +786,4 @@ Phases:
 docker-secret:
 source: https://www.npmjs.com/package/docker-secret
 
-![[Pasted image 20260202122614.png]]
+![image](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.kym-cdn.com%2Fphotos%2Fimages%2Foriginal%2F002%2F633%2F610%2F3d2.jpg&f=1&nofb=1&ipt=21cf8c49098f30e924ee71ac3e18dc9ec205253f57ef50d2e0d1493e430b7749)
