@@ -1,1 +1,21 @@
-# File ignored by git for Fapout69
+# Dependencies
+node_modules/
+package-lock.json
+
+# Secrets
+secrets/
+*.txt
+
+# Environment variables
+.env
+*.env
+
+# Docker volumes
+data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
