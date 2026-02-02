@@ -8,11 +8,11 @@ A categorized dictionary of commands for the JobPrep-AI team.
 
 *Use these commands to answer: "Where am I and what is happening?"*
 
-| Command | What it does | When to use it |
-| :--- | :--- | :--- |
-| **`git status`** | Shows modified files, staged files, and current branch. | **Constantly.** Use this before every add, commit, or push. |
-| **`git log --oneline`** | Shows a compact list of previous commits (history). | When you want to see what your team has done recently. |
-| **`git diff`** | Shows the specific lines of code you changed. | Before `git add`, to double-check you didn't leave a typo. |
+| Command                 | What it does                                            | When to use it                                              |
+| :---------------------- | :------------------------------------------------------ | :---------------------------------------------------------- |
+| **`git status`**        | Shows modified files, staged files, and current branch. | **Constantly.** Use this before every add, commit, or push. |
+| **`git log --oneline`** | Shows a compact list of previous commits (history).     | When you want to see what your team has done recently.      |
+| **`git diff`**          | Shows the specific lines of code you changed.           | Before `git add`, to double-check you didn't leave a typo.  |
 
 ---
 
@@ -20,11 +20,11 @@ A categorized dictionary of commands for the JobPrep-AI team.
 
 *Use these to keep your computer in sync with the team.*
 
-| Command | What it does | When to use it |
-| :--- | :--- | :--- |
-| **`git pull origin main`** | Downloads updates from GitHub and merges them. | **First thing in the morning** or before starting a new feature. |
-| **`git fetch`** | Downloads updates but **does not** merge them (safe mode). | When you just want to see if changes exist without touching your files. |
-| **`git push -u origin <branch>`** | Uploads your specific branch to GitHub. | When you have committed code and want to back it up or share it. |
+| Command                           | What it does                                               | When to use it                                                          |
+| :-------------------------------- | :--------------------------------------------------------- | :---------------------------------------------------------------------- |
+| **`git pull origin main`**        | Downloads updates from GitHub and merges them.             | **First thing in the morning** or before starting a new feature.        |
+| **`git fetch`**                   | Downloads updates but **does not** merge them (safe mode). | When you just want to see if changes exist without touching your files. |
+| **`git push -u origin <branch>`** | Uploads your specific branch to GitHub.                    | When you have committed code and want to back it up or share it.        |
 
 ---
 
@@ -71,3 +71,10 @@ Nuclear Option:
 git push --force origin main
 
 Hello word !
+
+git remote set-url origin [git@github.com](mailto:git@github.com):Asashi-Git/JobPrep-AI.git
+
+git remote -v
+
+git config --global user.email "email" 
+git config --global user.name "Username"
