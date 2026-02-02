@@ -42,10 +42,10 @@ services:
       - db_root_password
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      start_period: 10s
+      start_period: 30s
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
 
 volumes:
   mariadb_data:
