@@ -488,80 +488,43 @@ source: https://docs.cypress.io/app/core-concepts/writing-and-organizing-tests
 ### API DOCKERFILE
 
 ```dockerfile
-# ============================================
-# ÉTAPE 1 : Base (Le socle commun)
-# ============================================
-
 FROM node:lts-alpine AS base
 
-# Installation des outils système
-# curl est nécessaire pour le HEALTHCHECK
 RUN apk add --no-cache curl
 
-# Définition du répertoire de travail
 WORKDIR /app
 
-# On copie les définitions de dépendances
-# IMPORTANT : On ne copie PAS encore le code source pour profiter du cache Docker
 COPY package*.json ./
-
-# ============================================
-# ÉTAPE 2 : Développement (Target: development)
-# ============================================
 
 FROM base AS development
 
-# Utilisation de npm ci avec --include=dev
-# Cela force l'installation de TOUT (nodemon, jest, etc.)
 RUN npm ci --include=dev
 
-# Note : On ne copie pas le code source ici (src), car docker-compose utilise un volume.
-
-# Harmonisation avec le docker-compose (PORT 5000)
 EXPOSE 5000 
 
 CMD ["npm", "run", "dev"]
 
-# ============================================
-# ÉTAPE 3 : Préparation Production (Nettoyage)
-# ============================================
-
 FROM base AS deps-prod
 
-# Ici, on installe UNIQUEMENT les dépendances de production
-# --omit=dev garantit qu'aucun outil de test ou de build ne traîne.
 RUN npm ci --omit=dev
-
-# ============================================
-# ÉTAPE 4 : Production Finale (Target: production)
-# ============================================
 
 FROM node:lts-alpine AS production
 
-# On réinstalle curl pour la prod
 RUN apk add --no-cache curl
 
-# SÉCURITÉ : Création d'un utilisateur système restreint
 RUN addgroup -g 1001 -S nodejs && adduser -S expressjs -u 1001 -G nodejs
 
 WORKDIR /app
 
-# COPIE DES FICHIERS : On récupère les éléments préparés aux étapes précédentes
-
-# 1. On récupère les node_modules propres de l'étape 3
 COPY --from=deps-prod --chown=expressjs:nodejs /app/node_modules ./node_modules
 
-# 2. On copie le code source
 COPY --chown=expressjs:nodejs ./src ./src 
 COPY --chown=expressjs:nodejs package*.json ./
 
-# On bascule sur l'utilisateur restreint
 USER expressjs
 
-# Harmonisation avec le docker-compose
 EXPOSE 5000
 
-# Lancement
 CMD ["node", "src/server.js"]
 ```
 
@@ -593,35 +556,6 @@ COPY --from=build /app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
-```
-
-
-
-
-
-
-```yaml
-# Étape de base commune
-FROM node:lts-alpine AS base
-WORKDIR /app
-RUN apk add --no-cache dumb-init
-
-# Étape de développement
-FROM base AS development
-ENV NODE_ENV=development
-COPY package*.json ./
-RUN npm install
-COPY . .
-CMD ["dumb-init", "node", "--watch", "src/server.js"]
-
-# Étape de production
-FROM base AS production
-ENV NODE_ENV=production
-COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force
-COPY . .
-USER node
-CMD ["dumb-init", "node", "src/server.js"]
 ```
 
 Dockerfile:
@@ -718,22 +652,5 @@ Phases:
 3. Prepare the frontend
 
 
-
-```mermaid
-erDiagram
-    %% Le Coeur du systeme
-    USER ||--o{ JOB_APPLICATION : "Gère (Dossiers)"
-    USER ||--o{ CV : "Possède"
-    USER ||--o{ COVER_LETTER : "Possède"
-    USER ||--o{ API_USAGE : "Consomme"
-
-    %% Le Dossier de candidature regroupe les documents
-    JOB_APPLICATION }|--|| CV : "Contient"
-    JOB_APPLICATION }|--|| COVER_LETTER : "Contient"
-    JOB_APPLICATION }|--|| INTERVIEW : "Prépare"
-
-    %% La provenance (Traçabilité)
-    CV }o--|| PROMPT_TEMPLATE : "Généré par"
-    COVER_LETTER }o--|| PROMPT_TEMPLATE : "Généré par"
-    INTERVIEW }o--|| PROMPT_TEMPLATE : "Généré par"
-```
+docker-secret:
+source: https://www.npmjs.com/package/docker-secret
