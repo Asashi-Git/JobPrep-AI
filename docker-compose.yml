@@ -14,13 +14,13 @@ services:
       mariadb:
         condition: service_healthy
 
-  app:
-    container_name: jobprep_app
-    networks:
-      - jobprep_public_network
-    depends_on:
-      api:
-        condition: service_healthy
+  # app:
+  #   container_name: jobprep_app
+  #   networks:
+  #     - jobprep_public_network
+  #   depends_on:
+  #     api:
+  #       condition: service_healthy
 
   mariadb:
     image: mariadb:lts
