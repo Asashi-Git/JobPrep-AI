@@ -5,59 +5,65 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
+let pool;
+
 async function getSecret(secretName) {
   try {
     const secretPath = path.join('/run/secrets', secretName);
-    const data = await fs.readFileSync(secretPath, 'utf8');
-    return data
+    const secret = await fs.promises.readFile(secretPath, 'utf8');
+    return secret.trim();
   } catch (error) {
     console.error(`Error while reading ${secretName}:`, error);
     return null;
   }
 }
 
-getSecret('db_user').then(data => console.log(data));
-getSecret('db_password').then(data => console.log(data));
+async function createPool() {
+  try {
+    const dbUser = await getSecret('db_user');
+    const dbPassword = await getSecret('db_password');
+    const dbName = await getSecret('db_name');
 
-// async function connectDatabase {
-//   const pool = mariadb.createPool({
-//       host: 'mariadb', 
-//       user: dbUser, 
-//       password: dbPassword,
-//       connectionLimit: 5
-//   });
-//   pool.getConnection()
-//       .then(conn => {
-      
-//         conn.query("SELECT 1 as val")
-//           .then((rows) => {
-//             console.log(rows); //[ {val: 1}, meta: ... ]
-//             //Table must have been created before 
-//             // " CREATE TABLE myTable (id int, val varchar(255)) "
-//             return conn.query("INSERT INTO myTable value (?, ?)", [1, "mariadb"]);
-//           })
-//           .then((res) => {
-//             console.log(res); // { affectedRows: 1, insertId: 1, warningStatus: 0 }
-//             conn.end();
-//             pool.end();
-//           })
-//           .catch(err => {
-//             //handle error
-//             console.log(err); 
-//             conn.end();
-//             pool.end();
-//           })
-          
-//       }).catch(err => {
-//         //not connected
-//         pool.end();
-//       });
-// };
+    pool = mariadb.createPool({
+      host: 'mariadb',
+      user: dbUser,
+      password: dbPassword,
+      database: dbName,
+      connectionLimit: 5
+    });
+  } catch (error) {
+    console.error(`Error while creating pool:`, error);
+    return null;
+  };
+};
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+async function testDatabaseConnection() {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    console.log("Connected successfully!");
+    const tables = await conn.query("SHOW TABLES");
+    console.log(tables);
+  } catch (error) {
+    console.error(`Database connection failed:`, error);
+  } finally {
+    if (conn) {
+      conn.release();
+    }
+  };
+}
 
-app.listen(port, () => {
-  console.log(`App listening on http://localhost:${port}`)
-})
+async function startApp(){
+  await createPool();
+  await testDatabaseConnection();
+
+  app.get('/', (req, res) => {
+    res.send('Hello World!')
+  })
+
+  app.listen(port, () => {
+    console.log(`App listening on http://localhost:${port}`)
+  })
+};
+
+startApp();
