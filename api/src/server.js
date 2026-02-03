@@ -1,9 +1,13 @@
 const express = require('express');
 const mariadb = require('mariadb');
+const cors = require('cors')
 const fs = require('fs');
 const path = require('path');
 const app = express();
 const port = 3000;
+
+app.use(cors())
+app.use(express.json())
 
 let pool;
 
@@ -58,7 +62,7 @@ async function startApp(){
   await testDatabaseConnection();
 
   app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.send('Hello Worl!')
   })
 
   app.listen(port, () => {
