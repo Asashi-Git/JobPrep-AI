@@ -4,7 +4,7 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `email` varchar(255) UNIQUE NOT NULL,
   `created_at` timestamp DEFAULT (now())
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `api_usage` (
   `id_api_usage` integer PRIMARY KEY AUTO_INCREMENT,
@@ -15,7 +15,7 @@ CREATE TABLE `api_usage` (
   `model_used` varchar(50),
   `created_at` timestamp DEFAULT (now()),
   `id_user` integer NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `prompt_templates` (
   `id_prompt_template` integer PRIMARY KEY AUTO_INCREMENT,
@@ -25,7 +25,7 @@ CREATE TABLE `prompt_templates` (
   `version` varchar(20) NOT NULL,
   `is_active` boolean DEFAULT true,
   `created_at` timestamp DEFAULT (now())
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `curriculum_vitae` (
   `id_curriculum_vitae` integer PRIMARY KEY AUTO_INCREMENT,
@@ -37,7 +37,7 @@ CREATE TABLE `curriculum_vitae` (
   `id_user` integer NOT NULL,
   `id_prompt_template` integer NOT NULL,
   `id_api_usage` integer NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `cover_letters` (
   `id_cover_letter` integer PRIMARY KEY AUTO_INCREMENT,
@@ -51,7 +51,7 @@ CREATE TABLE `cover_letters` (
   `id_user` integer NOT NULL,
   `id_prompt_template` integer NOT NULL,
   `id_api_usage` integer NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `interviews` (
   `id_interview` integer PRIMARY KEY AUTO_INCREMENT,
@@ -65,7 +65,7 @@ CREATE TABLE `interviews` (
   `id_user` integer NOT NULL,
   `id_prompt_template` integer NOT NULL,
   `id_api_usage` integer NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `job_applications` (
   `id_job_application` integer PRIMARY KEY AUTO_INCREMENT,
@@ -80,7 +80,7 @@ CREATE TABLE `job_applications` (
   `id_user` integer NOT NULL,
   `id_curriculum_vitae` integer,
   `id_cover_letter` integer
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE UNIQUE INDEX `user_index_0` ON `user` (`email`);
 
