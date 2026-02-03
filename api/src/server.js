@@ -68,6 +68,7 @@ async function register(userPassword){
   }
 }
 
+// test
 async function login(inputPassword, storedHashFromDB){
   try{
     console.log(`Attempting login with ${inputPassword}`);
