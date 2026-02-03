@@ -1,10 +1,10 @@
 const express = require('express');
 const mariadb = require('mariadb');
 const cors = require('cors')
+const bcrypt = require('bcrypt');
 const fs = require('fs');
 const path = require('path');
 const app = express();
-const bcrypt = require('bcrypt');
 const port = 3000;
 
 app.use(cors())
@@ -84,12 +84,11 @@ async function login(inputPassword, storedHashFromDB){
     } else {
       console.log(`The password ${inputPassword} don't match`);
       return false;
-    } catch (error) {
+    } 
+  } catch (error) {
     console.error("Comparison error", error);
   }
-  }
-}
-
+};
 
 async function startApp(){
   await createPool();
