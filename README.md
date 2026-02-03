@@ -1,7 +1,8 @@
 
+
 ![image](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia1.tenor.com%2Fm%2FlP6cT-0rpx0AAAAC%2Fmark-zuckerberg.gif&f=1&nofb=1&ipt=b293fec11523570b1f076cfff29b4a275a2634db478573af86fe5259931590dc)
 
-Project: [https://lilac-bromine-67e.notion.site/Projet-Full-Stack-FlashMind-Flashcards-Quiz-IA-2f5ee7337bbf808faf35c78fc24d39ee](https://lilac-bromine-67e.notion.site/In-Memory-of-Gojo-2f6ee7337bbf80079c13d1c27f4eb0e4)
+Project: https://lilac-bromine-67e.notion.site/In-Memory-of-Gojo-2f6ee7337bbf80079c13d1c27f4eb0e4
 
 Techno used: Node.JS express cors, React.JS vite, Docker, MariaDb, Cypress.
 
@@ -575,13 +576,13 @@ source: https://www.docker.com/blog/docker-best-practices-choosing-between-run-c
 ### MariaDB
 
 ```sql
-CREATE TABLE `user` (
+CREATE TABLE `users` (
   `id_user` integer PRIMARY KEY AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(255) UNIQUE NOT NULL,
   `created_at` timestamp DEFAULT (now())
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `api_usage` (
   `id_api_usage` integer PRIMARY KEY AUTO_INCREMENT,
@@ -592,9 +593,9 @@ CREATE TABLE `api_usage` (
   `model_used` varchar(50),
   `created_at` timestamp DEFAULT (now()),
   `id_user` integer NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `prompt_template` (
+CREATE TABLE `prompt_templates` (
   `id_prompt_template` integer PRIMARY KEY AUTO_INCREMENT,
   `feature_type` varchar(50) NOT NULL,
   `template_name` varchar(100) NOT NULL,
@@ -602,7 +603,7 @@ CREATE TABLE `prompt_template` (
   `version` varchar(20) NOT NULL,
   `is_active` boolean DEFAULT true,
   `created_at` timestamp DEFAULT (now())
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `curriculum_vitae` (
   `id_curriculum_vitae` integer PRIMARY KEY AUTO_INCREMENT,
@@ -614,9 +615,9 @@ CREATE TABLE `curriculum_vitae` (
   `id_user` integer NOT NULL,
   `id_prompt_template` integer NOT NULL,
   `id_api_usage` integer NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `cover_letter` (
+CREATE TABLE `cover_letters` (
   `id_cover_letter` integer PRIMARY KEY AUTO_INCREMENT,
   `title` varchar(150),
   `target_company` varchar(150),
@@ -628,9 +629,9 @@ CREATE TABLE `cover_letter` (
   `id_user` integer NOT NULL,
   `id_prompt_template` integer NOT NULL,
   `id_api_usage` integer NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `interview` (
+CREATE TABLE `interviews` (
   `id_interview` integer PRIMARY KEY AUTO_INCREMENT,
   `title` varchar(150),
   `level` varchar(30) NOT NULL,
@@ -642,9 +643,9 @@ CREATE TABLE `interview` (
   `id_user` integer NOT NULL,
   `id_prompt_template` integer NOT NULL,
   `id_api_usage` integer NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `job_application` (
+CREATE TABLE `job_applications` (
   `id_job_application` integer PRIMARY KEY AUTO_INCREMENT,
   `company_name` varchar(150) NOT NULL,
   `position` varchar(150) NOT NULL,
@@ -657,7 +658,7 @@ CREATE TABLE `job_application` (
   `id_user` integer NOT NULL,
   `id_curriculum_vitae` integer,
   `id_cover_letter` integer
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE UNIQUE INDEX `user_index_0` ON `user` (`email`);
 
@@ -701,6 +702,222 @@ ALTER TABLE `job_application` ADD CONSTRAINT `fk_application_cv` FOREIGN KEY (`i
 
 ALTER TABLE `job_application` ADD CONSTRAINT `fk_application_letter` FOREIGN KEY (`id_cover_letter`) REFERENCES `cover_letter` (`id_cover_letter`) ON DELETE SET NULL;
 ```
+
+```sql
+CREATE TABLE `users` (
+  `id_user` integer PRIMARY KEY AUTO_INCREMENT,
+  `username` varchar(100) UNIQUE NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(255) UNIQUE NOT NULL,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `api_usage` (
+  `id_api_usage` integer PRIMARY KEY AUTO_INCREMENT,
+  `tokens_input` integer NOT NULL,
+  `tokens_output` integer NOT NULL,
+  `tokens_total` integer NOT NULL,
+  `cost_estimated` decimal(10,6) NOT NULL,
+  `model_used` varchar(50),
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `id_user` integer NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `prompt_templates` (
+  `id_prompt_template` integer PRIMARY KEY AUTO_INCREMENT,
+  `feature_type` varchar(50) NOT NULL,
+  `template_name` varchar(100) NOT NULL,
+  `template_text` text NOT NULL,
+  `version` varchar(20) NOT NULL,
+  `is_active` boolean DEFAULT true,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `curriculum_vitae` (
+  `id_curriculum_vitae` integer PRIMARY KEY AUTO_INCREMENT,
+  `title` varchar(150),
+  `input_data` text NOT NULL,
+  `output_text` text NOT NULL,
+  `output_format` varchar(20) DEFAULT 'markdown',
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `id_user` integer NOT NULL,
+  `id_prompt_template` integer NOT NULL,
+  `id_api_usage` integer NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `cover_letters` (
+  `id_cover_letter` integer PRIMARY KEY AUTO_INCREMENT,
+  `title` varchar(150),
+  `target_company` varchar(150),
+  `target_position` varchar(150),
+  `input_data` text NOT NULL,
+  `output_text` text NOT NULL,
+  `output_format` varchar(20) DEFAULT 'markdown',
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `id_user` integer NOT NULL,
+  `id_prompt_template` integer NOT NULL,
+  `id_api_usage` integer NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `interviews` (
+  `id_interview` integer PRIMARY KEY AUTO_INCREMENT,
+  `title` varchar(150),
+  `level` varchar(30) NOT NULL,
+  `interview_type` varchar(50),
+  `target_position` varchar(150),
+  `input_data` text NOT NULL,
+  `output_text` text NOT NULL,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `id_user` integer NOT NULL,
+  `id_prompt_template` integer NOT NULL,
+  `id_api_usage` integer NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `job_applications` (
+  `id_job_application` integer PRIMARY KEY AUTO_INCREMENT,
+  `company_name` varchar(150) NOT NULL,
+  `position` varchar(150) NOT NULL,
+  `job_url` varchar(500),
+  `status` varchar(30) NOT NULL DEFAULT 'DRAFT',
+  `notes` text,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `applied_at` timestamp NULL,
+  `updated_at` timestamp NULL,
+  `id_user` integer NOT NULL,
+  `id_curriculum_vitae` integer,
+  `id_cover_letter` integer
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX `idx_usage_user_date` ON `api_usage` (`id_user`, `created_at`);
+
+CREATE INDEX `idx_template_type_active` ON `prompt_templates` (`feature_type`, `is_active`);
+
+CREATE INDEX `idx_cv_user` ON `curriculum_vitae` (`id_user`);
+
+CREATE INDEX `idx_letter_user` ON `cover_letters` (`id_user`);
+
+CREATE INDEX `idx_interview_user` ON `interviews` (`id_user`);
+
+CREATE INDEX `idx_application_user` ON `job_applications` (`id_user`);
+
+CREATE INDEX `idx_application_user_status` ON `job_applications` (`id_user`, `status`);
+
+ALTER TABLE `api_usage` ADD CONSTRAINT `fk_api_usage_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE;
+
+ALTER TABLE `curriculum_vitae` ADD CONSTRAINT `fk_cv_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE;
+
+ALTER TABLE `curriculum_vitae` ADD CONSTRAINT `fk_cv_template` FOREIGN KEY (`id_prompt_template`) REFERENCES `prompt_templates` (`id_prompt_template`) ON DELETE RESTRICT;
+
+ALTER TABLE `curriculum_vitae` ADD CONSTRAINT `fk_cv_api_usage` FOREIGN KEY (`id_api_usage`) REFERENCES `api_usage` (`id_api_usage`) ON DELETE RESTRICT;
+
+ALTER TABLE `cover_letters` ADD CONSTRAINT `fk_letter_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE;
+
+ALTER TABLE `cover_letters` ADD CONSTRAINT `fk_letter_template` FOREIGN KEY (`id_prompt_template`) REFERENCES `prompt_templates` (`id_prompt_template`) ON DELETE RESTRICT;
+
+ALTER TABLE `cover_letters` ADD CONSTRAINT `fk_letter_api_usage` FOREIGN KEY (`id_api_usage`) REFERENCES `api_usage` (`id_api_usage`) ON DELETE RESTRICT;
+
+ALTER TABLE `interviews` ADD CONSTRAINT `fk_interview_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE;
+
+ALTER TABLE `interviews` ADD CONSTRAINT `fk_interview_template` FOREIGN KEY (`id_prompt_template`) REFERENCES `prompt_templates` (`id_prompt_template`) ON DELETE RESTRICT;
+
+ALTER TABLE `interviews` ADD CONSTRAINT `fk_interview_api_usage` FOREIGN KEY (`id_api_usage`) REFERENCES `api_usage` (`id_api_usage`) ON DELETE RESTRICT;
+
+ALTER TABLE `job_applications` ADD CONSTRAINT `fk_application_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE CASCADE;
+
+ALTER TABLE `job_applications` ADD CONSTRAINT `fk_application_cv` FOREIGN KEY (`id_curriculum_vitae`) REFERENCES `curriculum_vitae` (`id_curriculum_vitae`) ON DELETE SET NULL;
+
+ALTER TABLE `job_applications` ADD CONSTRAINT `fk_application_letter` FOREIGN KEY (`id_cover_letter`) REFERENCES `cover_letters` (`id_cover_letter`) ON DELETE SET NULL;
+```
+
+---
+
+
+### Server.js (Backend)
+
+```node
+const express = require('express');
+const mariadb = require('mariadb');
+const fs = require('fs');
+const path = require('path');
+const app = express();
+const port = 3000;
+
+let pool;
+
+async function getSecret(secretName) {
+  try {
+    const secretPath = path.join('/run/secrets', secretName);
+    const secret = await fs.promises.readFile(secretPath, 'utf8');
+    return secret.trim();
+  } catch (error) {
+    console.error(`Error while reading ${secretName}:`, error);
+    return null;
+  }
+}
+
+async function createPool() {
+  try {
+    const dbUser = await getSecret('db_user');
+    const dbPassword = await getSecret('db_password');
+    const dbName = await getSecret('db_name');
+
+    pool = mariadb.createPool({
+      host: 'mariadb',
+      user: dbUser,
+      password: dbPassword,
+      database: dbName,
+      connectionLimit: 5
+    });
+  } catch (error) {
+    console.error(`Error while creating pool:`, error);
+    return null;
+  };
+};
+
+async function testDatabaseConnection() {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    console.log("Connected successfully!");
+    const tables = await conn.query("SHOW TABLES");
+    console.log(tables);
+  } catch (error) {
+    console.error(`Database connection failed:`, error);
+  } finally {
+    if (conn) {
+      conn.release();
+    }
+  };
+}
+
+async function startApp(){
+  await createPool();
+  await testDatabaseConnection();
+
+  app.get('/', (req, res) => {
+    res.send('Hello World!')
+  })
+
+  app.listen(port, () => {
+    console.log(`App listening on http://localhost:${port}`)
+  })
+};
+
+startApp();
+```
+
+
+Read Secrets:
+source: https://www.w3tutorials.net/blog/docker-secrets-nodejs/#accessing-secrets-in-nodejs
+
+MariaDB connect to node:
+source: https://mariadb.com/docs/connectors/mariadb-connector-nodejs/getting-started-with-the-node-js-connector
+
+Await/Async:
+source: https://www.w3schools.com/nodejs/nodejs_async_await.asp
+
+Cors:
+source: https://expressjs.com/en/resources/middleware/cors.html
 
 
 ### API Mammouth AI: GPT-4:

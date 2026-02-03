@@ -4,6 +4,7 @@ const cors = require('cors')
 const fs = require('fs');
 const path = require('path');
 const app = express();
+const bcrypt = require('bcrypt');
 const port = 3000;
 
 app.use(cors())
@@ -56,6 +57,39 @@ async function testDatabaseConnection() {
     }
   };
 }
+
+// Creating a variable of the needed security level ! 10 is the standard.
+const securityLevel = 10;
+
+async function register(userPassword){
+  try{
+    console.log(`User ${userName} typed this password ${userPassword}`);
+    const hashedPassword = await bcrypt.hash(userPassword, securityLevel);
+    console.log(`This password is the hash that we store ${hashedPassword}`);
+    return hashedPassword;
+  } catch (error) {
+    console.error("Hashing failed", error);
+  }
+}
+
+// test
+async function login(inputPassword, storedHashFromDB){
+  try{
+    console.log(`Attempting login with ${inputPassword}`);
+    const match = await bcrypt.compare(inputPassword, storedHashFromDB)
+
+    if (match) {
+      console.log(`The password ${inputPassword} match`);
+      return true;
+    } else {
+      console.log(`The password ${inputPassword} don't match`);
+      return false;
+    } catch (error) {
+    console.error("Comparison error", error);
+  }
+  }
+}
+
 
 async function startApp(){
   await createPool();
