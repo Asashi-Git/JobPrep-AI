@@ -1,10 +1,10 @@
-CREATE TABLE `user` (
+CREATE TABLE `users` (
   `id_user` integer PRIMARY KEY AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(255) UNIQUE NOT NULL,
   `created_at` timestamp DEFAULT (now())
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
 
 CREATE TABLE `api_usage` (
   `id_api_usage` integer PRIMARY KEY AUTO_INCREMENT,
@@ -15,9 +15,9 @@ CREATE TABLE `api_usage` (
   `model_used` varchar(50),
   `created_at` timestamp DEFAULT (now()),
   `id_user` integer NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
 
-CREATE TABLE `prompt_template` (
+CREATE TABLE `prompt_templates` (
   `id_prompt_template` integer PRIMARY KEY AUTO_INCREMENT,
   `feature_type` varchar(50) NOT NULL,
   `template_name` varchar(100) NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE `prompt_template` (
   `version` varchar(20) NOT NULL,
   `is_active` boolean DEFAULT true,
   `created_at` timestamp DEFAULT (now())
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
 
 CREATE TABLE `curriculum_vitae` (
   `id_curriculum_vitae` integer PRIMARY KEY AUTO_INCREMENT,
@@ -37,9 +37,9 @@ CREATE TABLE `curriculum_vitae` (
   `id_user` integer NOT NULL,
   `id_prompt_template` integer NOT NULL,
   `id_api_usage` integer NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
 
-CREATE TABLE `cover_letter` (
+CREATE TABLE `cover_letters` (
   `id_cover_letter` integer PRIMARY KEY AUTO_INCREMENT,
   `title` varchar(150),
   `target_company` varchar(150),
@@ -51,9 +51,9 @@ CREATE TABLE `cover_letter` (
   `id_user` integer NOT NULL,
   `id_prompt_template` integer NOT NULL,
   `id_api_usage` integer NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
 
-CREATE TABLE `interview` (
+CREATE TABLE `interviews` (
   `id_interview` integer PRIMARY KEY AUTO_INCREMENT,
   `title` varchar(150),
   `level` varchar(30) NOT NULL,
@@ -65,9 +65,9 @@ CREATE TABLE `interview` (
   `id_user` integer NOT NULL,
   `id_prompt_template` integer NOT NULL,
   `id_api_usage` integer NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
 
-CREATE TABLE `job_application` (
+CREATE TABLE `job_applications` (
   `id_job_application` integer PRIMARY KEY AUTO_INCREMENT,
   `company_name` varchar(150) NOT NULL,
   `position` varchar(150) NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE `job_application` (
   `id_user` integer NOT NULL,
   `id_curriculum_vitae` integer,
   `id_cover_letter` integer
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
 
 CREATE UNIQUE INDEX `user_index_0` ON `user` (`email`);
 
