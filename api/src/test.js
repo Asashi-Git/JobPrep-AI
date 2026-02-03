@@ -1,3 +1,5 @@
+// const bcrypt = require('bcrypt');
+
 // let userName = "Anuc";
 
 // // Creating a variable of the needed security level ! 10 is the standard.
@@ -33,53 +35,53 @@
 // };
 
 
-register = async (req, res) => {
-    // 1. Déstructuration et Validation des entrées
-    // On extrait username, email et password du corps de la requête
-    const { username, email, password } = req.body;
+// register = async (req, res) => {
+//     // 1. Déstructuration et Validation des entrées
+//     // On extrait username, email et password du corps de la requête
+//     const { username, email, password } = req.body;
 
-    // Vérification basique (Fail Fast)
-    if (!username || !email || !password) {
-        return res.status(400).json({ error: "Tous les champs sont obligatoires." });
-    }
+//     // Vérification basique (Fail Fast)
+//     if (!username || !email || !password) {
+//         return res.status(400).json({ error: "Tous les champs sont obligatoires." });
+//     }
 
-    try {
-        // 2. Vérification de l'existence de l'utilisateur (par email)
-        // On utilise '?' pour éviter les injections SQL (Prepared Statements)
-        const [existingUsers] = await db.query(
-            'SELECT id_user FROM users WHERE email = ?', 
-            [email]
-        );
+//     try {
+//         // 2. Vérification de l'existence de l'utilisateur (par email)
+//         // On utilise '?' pour éviter les injections SQL (Prepared Statements)
+//         const [existingUsers] = await db.query(
+//             'SELECT id_user FROM users WHERE email = ?', 
+//             [email]
+//         );
 
-        if (existingUsers.length > 0) {
-            // Conflit : L'utilisateur existe déjà
-            return res.status(409).json({ error: "Cet email est déjà utilisé." });
-        }
+//         if (existingUsers.length > 0) {
+//             // Conflit : L'utilisateur existe déjà
+//             return res.status(409).json({ error: "Cet email est déjà utilisé." });
+//         }
 
-        // 3. Hachage du mot de passe
-        // C'est ici que la magie de bcrypt opère. C'est une opération lente (volontairement).
-        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+//         // 3. Hachage du mot de passe
+//         // C'est ici que la magie de bcrypt opère. C'est une opération lente (volontairement).
+//         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-        // 4. Insertion dans la base de données
-        // Notez que created_at est géré automatiquement par MySQL
-        const [result] = await db.query(
-            'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
-            [username, email, hashedPassword]
-        );
+//         // 4. Insertion dans la base de données
+//         // Notez que created_at est géré automatiquement par MySQL
+//         const [result] = await db.query(
+//             'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+//             [username, email, hashedPassword]
+//         );
 
-        // 5. Réponse de succès
-        // On renvoie l'ID créé, mais JAMAIS le mot de passe
-        res.status(201).json({ 
-            message: "Utilisateur créé avec succès",
-            userId: result.insertId 
-        });
+//         // 5. Réponse de succès
+//         // On renvoie l'ID créé, mais JAMAIS le mot de passe
+//         res.status(201).json({ 
+//             message: "Utilisateur créé avec succès",
+//             userId: result.insertId 
+//         });
 
-    } catch (error) {
-        // 6. Gestion globale des erreurs
-        console.error("Erreur lors de l'inscription :", error);
-        res.status(500).json({ error: "Erreur interne du serveur." });
-    }
-};
+//     } catch (error) {
+//         // 6. Gestion globale des erreurs
+//         console.error("Erreur lors de l'inscription :", error);
+//         res.status(500).json({ error: "Erreur interne du serveur." });
+//     }
+// };
 
 
 // app.post("/createUser", async (req,res) => {
