@@ -1,17 +1,19 @@
-const express = require('express');
-const cors = require('cors')
+import express from 'express';
+import cors from 'cors';
+
 const app = express();
 const port = 3000;
 
 // Functions
 // Database: createPool() and testDatabaseConnection()
-const { createPool, testDatabaseConnection } = require('./database/database.js');
+// const { createPool, testDatabaseConnection } = require('./database/database.js');
+import { createPool, testDatabaseConnection } from './database/database.js';
 
 // Routes
 // index.js route
-const index = require("./routes/index.js");
+import { routerIndex } from './routes/index.js';
 // users.js route
-const users = require("./routes/users.js");
+import { routerUsers } from './routes/users.js';
 
 // Middlewares
 app.use(cors());
@@ -24,9 +26,9 @@ async function startApp(){
 
   // Routes
   // index.js route
-  app.use("/", index);
+  app.use("/", routerIndex);
   // users.js route
-  app.use("/users", users);
+  app.use("/users", routerUsers);
 
   app.listen(port, () => {
     console.log(`App listening on http://localhost:${port}`)

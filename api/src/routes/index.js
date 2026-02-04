@@ -1,10 +1,8 @@
 // index.js - Index route module.
-const express = require("express");
-const router = express.Router();
+import express from 'express';
+export const routerIndex = express.Router();
 
 // Home page route.
-router.get("/", (req, res) => {
+routerIndex.get("/", (req, res) => {
   res.send("Welcome");
 });
-
-module.exports = router;

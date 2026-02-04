@@ -1,6 +1,6 @@
-const mariadb = require('mariadb');
-const fs = require('fs');
-const path = require('path');
+import mariadb from 'mariadb';
+import fs from 'fs';
+import path from 'path';
 
 let pool;
 
@@ -15,7 +15,7 @@ async function getSecret(secretName) {
   };
 };
 
-async function createPool() {
+export async function createPool() {
   try {
     const dbUser = await getSecret('db_user');
     const dbPassword = await getSecret('db_password');
@@ -34,7 +34,7 @@ async function createPool() {
   };
 };
 
-async function testDatabaseConnection() {
+export async function testDatabaseConnection() {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -48,9 +48,4 @@ async function testDatabaseConnection() {
       conn.release();
     }
   };
-};
-
-module.exports = {
-  createPool,
-  testDatabaseConnection
 };
