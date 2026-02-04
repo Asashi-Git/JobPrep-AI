@@ -18,12 +18,10 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./api/src:/app/src
-      - ./api/package.json:/app/package.json
-      - ./api/package-lock.json:/app/package-lock.json
+      - ./api:/app
       - api_node_modules:/app/node_modules
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -36,13 +34,11 @@ services:
       target: development
     restart: no
     environment:
-      - VITE_API_URL=http://localhost:3000/api 
+      - VITE_API_URL=http://localhost:3000
     ports:
       - "5000:5000"
     volumes:
-      - ./app/src:/app/src
-      - ./app/package.json:/app/package.json
-      - ./app/package-lock.json:/app/package-lock.json
+      - ./app:/app
       - app_node_modules:/app/node_modules
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000"]

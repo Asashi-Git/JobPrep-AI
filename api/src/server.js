@@ -14,6 +14,9 @@ import { createPool, testDatabaseConnection } from './database/database.js';
 import { routerIndex } from './routes/index.js';
 // users.js route
 import { routerUsers } from './routes/users.js';
+// health.js route
+import { routerHealth } from './routes/health.js';
+
 
 // Middlewares
 app.use(cors());
@@ -29,6 +32,8 @@ async function startApp(){
   app.use("/", routerIndex);
   // users.js route
   app.use("/users", routerUsers);
+  // health.js route
+  app.use("/", routerHealth);
 
   app.listen(port, () => {
     console.log(`App listening on http://localhost:${port}`)

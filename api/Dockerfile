@@ -10,7 +10,7 @@ FROM base AS development
 
 RUN npm ci --include=dev
 
-EXPOSE 5000 
+COPY . .
 
 CMD ["npm", "run", "dev"]
 
@@ -27,11 +27,10 @@ RUN addgroup -g 1001 -S nodejs && adduser -S expressjs -u 1001 -G nodejs
 WORKDIR /app
 
 COPY --from=deps-prod --chown=expressjs:nodejs /app/node_modules ./node_modules
+
 COPY --chown=expressjs:nodejs ./src ./src 
 COPY --chown=expressjs:nodejs package*.json ./
 
 USER expressjs
-
-EXPOSE 5000
 
 CMD ["node", "src/server.js"]
