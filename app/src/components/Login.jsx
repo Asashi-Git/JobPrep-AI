@@ -6,7 +6,7 @@ function Login() {
   const goToRegister = useNavStore((state) => state.goToRegister);
 
   return (
-    <div className="card" style={{ display: 'flex', alignItems: 'center'}}>
+    <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <h2>Login</h2>
       <input type="text" placeholder="username" />
       <input type="password" placeholder="password" />

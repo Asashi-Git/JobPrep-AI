@@ -5,9 +5,9 @@ function Dashboard() {
 
   return (
     <div className="card">
-      <h2>Tableau de Bord</h2>
+      <h2>Dashboard</h2>
       <p>Bienvenue dans l'espace sécurisé.</p>
-      <button onClick={goToLogin}>Se déconnecter</button>
+      <button onClick={goToLogin}>Logout</button>
     </div>
   );
 }
