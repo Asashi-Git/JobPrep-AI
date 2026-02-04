@@ -1,34 +1,43 @@
+// src/App.jsx
 import { useState } from 'react'
-import reactLogo from '../public/mark-meth.jpg'
-import viteLogo from '../public/iu_.png'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+import Login from './components/Login'
+import Dashboard from './components/Dashboard'
 
+function App() {
+  // 1. L'ÉTAT (La mémoire de l'écran actuel)
+  // 'currentView' stocke le nom de l'écran affiché : 'login' ou 'dashboard'
+  const [currentView, setCurrentView] = useState('login');
+
+  // 2. LES FONCTIONS DE NAVIGATION (La télécommande)
+  const navigateToDashboard = () => {
+    setCurrentView('dashboard');
+  };
+
+  const navigateToLogin = () => {
+    setCurrentView('login');
+  };
+
+  // 3. LE RENDU (L'Affichage)
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="app-container">
+      <header>
+        <h1>JobPrep</h1>
+      </header>
+
+      <main>
+        {/* C'est ici que la magie du Rendu Conditionnel opère */}
+        
+        {currentView === 'login' && (
+          <Login onLoginSuccess={navigateToDashboard} />
+        )}
+
+        {currentView === 'dashboard' && (
+          <Dashboard onLogout={navigateToLogin} />
+        )}
+      </main>
+    </div>
   )
 }
 
