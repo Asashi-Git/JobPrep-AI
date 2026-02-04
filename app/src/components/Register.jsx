@@ -1,11 +1,20 @@
-// src/components/Login.jsx
-function Login({ onLoginSuccess }) {
+import { useNavStore } from '../store/useNavStore';
+
+function Register() {
+  const goToLogin = useNavStore((state) => state.goToLogin);
+
   return (
     <div className="card">
-      <h2>Connexion</h2>
-      <input type="text" placeholder="Utilisateur" />
-      <button onClick={onLoginSuccess}>Entrer</button>
+      <h2>Créer un compte</h2>
+      <input type="text" placeholder="Nouvel utilisateur" />
+      
+      <div style={{ marginTop: '20px' }}>
+        <button onClick={goToLogin}>
+          S'inscrire et retourner au Login
+        </button>
+      </div>
     </div>
   );
 }
-export default Login;
+
+export default Register;
