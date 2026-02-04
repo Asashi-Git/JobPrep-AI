@@ -5,12 +5,14 @@ function Register() {
 
   return (
     <div className="card">
-      <h2>Créer un compte</h2>
-      <input type="text" placeholder="Nouvel utilisateur" />
+      <h2>Create an Account</h2>
+      <input type="text" placeholder="username" />
+      <input type="text" placeholder="email" />
+      <input type="password" placeholder="password" />
       
       <div style={{ marginTop: '20px' }}>
         <button onClick={goToLogin}>
-          S'inscrire et retourner au Login
+          Sign up and Sign in
         </button>
       </div>
     </div>
