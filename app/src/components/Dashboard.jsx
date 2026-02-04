@@ -1,4 +1,3 @@
-// src/components/Dashboard.jsx
 function Dashboard({ onLogout }) {
   return (
     <div className="card">
