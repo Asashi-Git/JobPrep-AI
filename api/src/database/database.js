@@ -3,7 +3,7 @@ import mariadb from 'mariadb';
 import fs from 'fs';
 import path from 'path';
 
-let pool;
+export let pool;
 
 async function getSecret(secretName) {
   try {
