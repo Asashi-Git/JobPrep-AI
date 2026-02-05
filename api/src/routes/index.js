@@ -1,4 +1,4 @@
-// index.js - Index route module.
+// src/routes/index.js
 import express from 'express';
 export const routerIndex = express.Router();
 

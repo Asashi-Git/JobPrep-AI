@@ -1,3 +1,4 @@
+// src/database/database.js
 import mariadb from 'mariadb';
 import fs from 'fs';
 import path from 'path';

@@ -1,3 +1,4 @@
+// src/components/Register.jsx
 import { useNavStore } from '../store/useNavStore';
 
 function Register() {

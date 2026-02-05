@@ -1,4 +1,4 @@
-// health.js - Index route module.
+// src/routes/health.js
 import express from 'express';
 export const routerHealth = express.Router();
 

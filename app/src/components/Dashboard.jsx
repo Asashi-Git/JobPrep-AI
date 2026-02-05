@@ -1,3 +1,4 @@
+// src/components/Dashboard.jsx
 import { useNavStore } from '../store/useNavStore';
 
 function Dashboard() {
